@@ -1,0 +1,119 @@
+<apex:page >
+    <apex:stylesheet value="https://cdn.datatables.net/1.10.16/css/jquery.dataTables.min.css"/>
+    <apex:includeScript: value="https://code.jquery.com/jquery-1.12.4.js"/>
+    <apex:includeScript: value="https://cdn.datatables.net/1.10.16/js/jquery.dataTables.min.js"/>
+    <apex:includeScript: value="https://cdn.datatables.net/plug-ins/1.10.16/sorting/date-uk.js"/>
+    <apex:includeScript: value="https://momentjs.com/downloads/moment-with-locales.min.js"/>
+    
+    <table id="example" class="display" cellspacing="0" width="100%">
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Age</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </thead>
+    <tfoot>
+        <tr>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Office</th>
+            <th>Age</th>
+            <th>Start date</th>
+            <th>Salary</th>
+        </tr>
+    </tfoot>
+    <tbody>
+        <tr>
+            <td>Tiger Nixon</td>
+            <td>System Architect</td>
+            <td>Edinburgh</td>
+            <td>61</td>
+            <td>Overdue: 7 day(s) Target Date: 04/01/2017</td>
+            <td>$320,800</td>
+        </tr>
+        <tr>
+            <td>Garrett Winters</td>
+            <td>Accountant</td>
+            <td>Tokyo</td>
+            <td>63</td>
+            <td>Overdue: 7 day(s) Target Date: 04/01/2017</td>
+            <td>$170,750</td>
+        </tr>
+        <tr>
+            <td>Ashton Cox</td>
+            <td>Junior Technical Author</td>
+            <td>San Francisco</td>
+            <td>66</td>
+            <td>Overdue: 41 day(s) Target Date: 17/11/2016</td>
+            <td>$86,000</td>
+        </tr>
+        <tr>
+            <td>Cedric Kelly</td>
+            <td>Senior Javascript Developer</td>
+            <td>Edinburgh</td>
+            <td>22</td>
+            <td>Overdue: 21 day(s) Target Date: 15/12/2016</td>
+            <td>$433,060</td>
+        </tr>
+        <tr>
+            <td>Airi Satou</td>
+            <td>Accountant</td>
+            <td>Tokyo</td>
+            <td>33</td>
+            <td>Overdue: 2 day(s) Target Date: 11/01/2017</td>
+            <td>$162,700</td>
+        </tr>
+        <tr>
+            <td>Brielle Williamson</td>
+            <td>Integration Specialist</td>
+            <td>New York</td>
+            <td>61</td>
+            <td>Overdue: 171 day(s) Target Date: 19/05/2016</td>
+            <td>$372,000</td>
+        </tr>
+        <tr>
+            <td>Herrod Chandler</td>
+            <td>Sales Assistant</td>
+            <td>San Francisco</td>
+            <td>59</td>
+            <td>Overdue: 171 day(s) Target Date: 19/05/2016</td>
+            <td>$137,500</td>
+        </tr>
+    </tbody>
+</table>
+    <script>
+    	$("#example").DataTable({
+    columns: [
+        null,
+        null,
+        null,
+        null, {
+            "render": function(d) {
+                return $("<span></span>", {
+                    "text": d,
+                    "data-date": d.match(/[0-9]{2}[\/][0-9]{2}[\/][0-9]{4}$/)[0]
+                }).prop("outerHTML");
+            },
+            "type": "data-date"
+        },
+        null
+    ]
+});
+
+jQuery.extend(jQuery.fn.dataTableExt.oSort, {
+    "data-date-pre": function(a) {
+        return parseInt(moment($(a).data("date"), "DD/MM/YYYY").format("X"), 10);
+    },
+    "data-date-asc": function(a, b) {
+        return ((a < b) ? -1 : ((a > b) ? 1 : 0));
+    },
+    "data-date-desc": function(a, b) {
+        return ((a < b) ? 1 : ((a > b) ? -1 : 0));
+    }
+});
+    </script>
+</apex:page>

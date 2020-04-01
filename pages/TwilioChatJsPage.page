@@ -1,0 +1,18 @@
+<apex:page >
+    test
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script type="text/javascript" src="https://media.twiliocdn.com/sdk/js/client/v1.7/twilio.min.js"></script>
+    <script type="text/javascript" src="https://media.twiliocdn.com/sdk/js/sync/releases/0.11.2/twilio-sync.min.js"></script>
+    
+    <script src="https://media.twiliocdn.com/sdk/js/chat/v3.2/twilio-chat.min.js"></script>
+    <script>
+    		var token = 'eyJjdHkiOiJ0d2lsaW8tZnBhO3Y9MSIsImFsZyI6IkhTMjU2IiwidHlwIjoiSldUIn0.eyJncmFudHMiOnsiaWRlbnRpdHkiOiJwZGFsYWxAb2ZmaWNlYmVhY29uLmNvbSIsImNoYXQiOnsic2VydmljZV9zaWQiOiJJUzZmYjA1MzdhNjA5MzRlNTNiNTU0MmY0NzY0M2U1NWUzIn19LCJuYmYiOjE1NjM4NjI2MTUsImp0aSI6IlNLNTgzN2IxNTMzZDJhMWFiMDNmNmZjMTFjYWM1Yzg0N2YxNDUwNDcxMTQ3Iiwic3ViIjoiQUNiNWNhMzNjYzE3YTBlMjNmNTBkNTc1NGM2ODI1NzY5NyIsImV4cCI6MTU2Mzg2NjIxNSwiaXNzIjoiU0s1ODM3YjE1MzNkMmExYWIwM2Y2ZmMxMWNhYzVjODQ3ZiJ9.5xJ0V0-yHR4qeKAfgpqgNTwSTCrZj2DLVO9HBa8KULs';
+    let clientOptions = { logLevel: 'debug' };
+        Twilio.Chat.Client.create(token,clientOptions).then(client => {
+                // Use client
+                console.log('client',client);
+            },error => {
+            console.log(error); 
+        });
+    </script>
+</apex:page>

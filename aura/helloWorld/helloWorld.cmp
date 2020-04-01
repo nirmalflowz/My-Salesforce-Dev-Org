@@ -1,0 +1,137 @@
+<aura:component controller="SampleController">
+    
+    <ltng:require styles="{!join(',', $Resource.datatable + '/datatables.min.css',
+                          $Resource.datatable + '/responsive.dataTables.min.css',
+                          $Resource.datatable + '/select.dataTables.min.css')
+                          }" 
+                 scripts="{!join(',', 
+                          $Resource.datatable + '/jquery.min.js', 
+                          $Resource.datatable + '/datatables.min.js',
+                          $Resource.datatable + '/dataTables.responsive.min.js',
+                          $Resource.datatable + '/dataTables.select.min.js')
+                          }" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+    
+    <aura:attribute name="message" type="String" />
+    <aura:attribute name="progressBarWidth" type="String"/>
+    <aura:attribute name="listData" type="Object"/>
+    <aura:attribute name="selectedRows" type="Object"/>
+    <aura:attribute name="currentStep" type="String" />
+    <aura:attribute name="hideBackBtn" type="String" />
+    <aura:handler action="{!c.doInit}" name="init" value="{!this}"></aura:handler>
+    <aura:handler event="c:ceEvent" action="{!c.handleCmpEvent}"></aura:handler>
+    <aura:attribute name="msgFromCmp" type="String"/>
+    
+    <div>{!v.msgFromCmp}</div>
+    <div class="slds-page-header" role="banner" style="background-color:#e3e3e3;">
+        <div class="slds-media">
+            
+            <div class="slds-media__body">
+                <p class="slds-page-header__title slds-truncate slds-align-middle" title="Scart">Scart</p>
+                
+            </div>
+        </div>
+    </div>
+    <lightning:input type="color" label="Color" value="#EEEEEE"></lightning:input>
+    <div class="sldsWizard" style="width:80%;margin:0 auto;margin-top:30px;">
+        <div class="slds-wizard" role="navigation">
+            <ol class="slds-wizard__list">
+                <li class="slds-wizard__item slds-is-active">
+                    <a href="#void" class="slds-wizard__link">
+                        <span class="slds-wizard__marker"></span>
+                        <span class="slds-wizard__label slds-text-heading--label slds-truncate">Navigation</span>
+                    </a>
+                </li>
+                <li class="slds-wizard__item slds-is-active">
+                    <a href="#void" class="slds-wizard__link">
+                        <span class="slds-wizard__marker"></span>
+                        <span class="slds-wizard__label slds-text-heading--label slds-truncate">Actions</span>
+                    </a>
+                </li>
+                <li class="slds-wizard__item slds-is-active">
+                    <a href="#void" class="slds-wizard__link">
+                        <span class="slds-wizard__marker"></span>
+                        <span class="slds-wizard__label slds-text-heading--label slds-truncate">Compact Layout</span>
+                    </a>
+                </li>
+                
+            </ol>
+            <span class="slds-wizard__progress">
+                <span class="slds-wizard__progress-bar" style="{!'width:'+v.progressBarWidth}"></span>
+            </span>
+        </div>
+        <hr/>
+        
+        
+        <div class="tab show" aura:id="step">
+            <table id="example" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        
+                    </tr>
+                </thead>
+                <!--<tbody>
+                    <aura:iteration items="{!v.listData}" var="obj">
+                        <tr>
+                            <td></td>
+                            <td>{!obj.Name}</td> 
+                            <td>{!obj.Phone}</td>
+                            <td>{!obj.Email}</td> 
+                        </tr>
+                    </aura:iteration>
+                </tbody>-->
+                
+            </table>
+        </div>
+        
+        <div class="tab hide" aura:id="step">
+        	<table id="selectedTable" class="display" style="width:100%">
+                <thead>
+                    <tr>
+                        
+                        <th>Name</th>
+                        <th>Phone</th>
+                        <th>Email</th>
+                        
+                    </tr>
+                </thead>
+                <!--<tbody>
+                    <aura:iteration items="{!v.selectedRows}" var="obj">
+                        <tr>
+                            <td></td>
+                            <td>{!obj.Name}</td> 
+                            <td>{!obj.Phone}</td>
+                            <td>{!obj.Email}</td> 
+                        </tr>
+                    </aura:iteration>
+                </tbody>-->
+                
+            </table>
+        </div>
+        <div class="tab hide" aura:id="step">
+            <lightning:overlayLibrary aura:id="overlayLib"/>
+
+        	<aura:iteration items="{!v.selectedRows}" var="obj">
+                <lightning:card title="{!obj.Name}" iconName="standard:contact" footer="">
+                    <aura:set attribute="actions">
+                        <lightning:button label="View" name="modal" onclick="{!c.showDetails}" value="{!obj}"/>
+                    </aura:set>
+                    <p class="slds-p-horizontal_small">
+                        Phone : {!obj.Phone}<br/>
+                        Email : {!obj.Email}
+                    </p>
+                </lightning:card>
+            </aura:iteration>
+        </div>
+        <hr/>
+        
+        <div class="navButtons">
+            <button class="slds-button slds-button--neutral" onclick="{!c.prevStep}" disabled="{!v.hideBackBtn=='true'}">Back</button>
+            <button class="slds-button slds-button--neutral" style="float:right;" onclick="{!c.getRecords}">Next</button>
+        </div>
+    </div>
+    
+</aura:component>

@@ -1,0 +1,74 @@
+<apex:page controller="SampleController">
+
+<div ng-app="myApp">
+	<div ng-controller="remotingController">
+		<label>Account Name : <input type="text" name="accName" ng-model="accName"/></label>
+		<button class="btn-success" ng-click="getDetail()">Get Detail</button>
+	</div>
+</div>
+
+<apex:includeScript value="{!URLFOR($Resource.angular, 'angular/angular.min.js')}"/>
+<!--  <apex:includeScript value="{!$Resource.app_js}"/>-->
+<script>
+	var app = angular.module('myApp',[]);
+	
+	function remotingFactory($q){
+    	DataFactoryObj = {};
+    	
+    	DataFactoryObj.invokeRemoteAction = function(options){
+    		var defer = $q.defer();
+    		options.callback = function(result,event){
+    			if(event.status){
+    				defer.resolve(result);
+    			}else{
+    				defer.reject(event.message);
+    			}
+    		};
+    		
+    		options.vfConfig = {escape:false};
+    		var arguments = [];
+    		
+    		arguments.push(options.url);
+    		
+    		for(var i=0,len=options.params.length;i<len;i++){
+    			arguments.push(options.params[i]);
+    		}
+    		
+    		arguments.push(options.callback);
+    		arguments.push(options.vfConfig);
+    		Visualforce.remoting.Manager.invokeAction.apply(Visualforce.remoting.Manager,arguments);
+    		return defer.promise;
+    	}
+    	return DataFactoryObj;
+    }
+    app.factory('remotingFactory',remotingFactory);
+    
+    
+    
+    
+    function remotingController($scope,remotingFactory){
+    	
+    	$scope.accName='';
+    	
+    	$scope.getDetail = function(){
+    		var options = {
+	    		url:'SampleController.getAccount',
+	    		params:[$scope.accName]
+    		};
+    		
+    		remotingFactory.invokeRemoteAction(options).then(
+	    		function(result){
+	    			console.log(result);
+	    		},
+	    		function(error){
+	    			console.log(error);
+	    		}
+    		);    
+    	}
+    }
+    
+    app.controller('remotingController',remotingController);
+	
+</script>
+
+</apex:page>

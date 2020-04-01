@@ -1,0 +1,18 @@
+<apex:page controller="AttachmentController">
+    <table>
+        <tr>
+            <th>Name</th>
+            <th>Attachment</th>
+        </tr>
+        <apex:repeat value="{!attachmentList}" var="attachment">
+            <tr>
+                <td>{!attachment.Name}</td>
+                <td><a href="{!$Site.BaseUrl}/servlet/servlet.FileDownload?file={!attachment}">View Attachment</a></td>
+            </tr>
+        </apex:repeat>
+        
+    </table>
+    <script>
+    	
+    </script>
+</apex:page>

@@ -1,0 +1,67 @@
+<aura:component>
+    <aura:attribute name="record" type="object" />
+    <aura:attribute name="fieldName" type="String" />
+    <aura:attribute name="fieldType" type="String" />
+    <aura:attribute name="fieldvalue" type="String" />    
+    <aura:attribute name="recId" type="String" />
+    <aura:attribute name="columnMeta" type="object"/>
+    <aura:attribute name="columnToEdit" type="String" default=""/>
+    <aura:attribute name="isEditMode" type="boolean" default="false"/>
+    <aura:attribute name="recordIdToEdit" type="String" default=""/>
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <span class="slds-truncate" >
+        <aura:if isTrue="{!empty(v.recId)}">       
+            <!-- FOR TEXT Fileds -->
+            <aura:if isTrue="{!v.columnMeta.isUpdatable}">
+                <aura:if isTrue="{!v.isEditMode}">
+                    <aura:if isTrue="{! and(v.columnToEdit == v.fieldName, v.recordIdToEdit == v.record.Id)}">
+                        <section  tabindex="0" class="slds-popover slds-popover_edit" role="dialog" style="position: absolute; top: 0px">
+                            <div class="slds-popover__body">
+                                <div class="slds-form-element slds-grid slds-wrap">
+                                    <div class="slds-form-element__control slds-grow">
+                                        <lightning:inputField fieldName="{!v.fieldName}" value="{!v.fieldValue}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <span id="form-end" tabindex="0"></span>
+                        </section>
+                        <aura:set attribute="else">
+                            <aura:if isTrue="{!equals(v.fieldType, 'datetime')}">                
+                                <lightning:formattedDateTime class="wrap_text" value="{!v.fieldvalue}" year="numeric" 
+                                                             month="numeric" day="numeric"  
+                                                             hour="2-digit" minute="2-digit" />
+                                <aura:set attribute="else">
+                                    <lightning:formattedRichText class="wrap_text grpImg" value="{!v.fieldvalue}"></lightning:formattedRichText> 
+                                </aura:set>                
+                            </aura:if> 
+                        </aura:set>
+                    </aura:if>
+                    
+                    <aura:set attribute="else">
+                        <aura:if isTrue="{!equals(v.fieldType, 'datetime')}">                
+                            <lightning:formattedDateTime class="wrap_text" value="{!v.fieldvalue}" year="numeric" 
+                                                         month="numeric" day="numeric"  
+                                                         hour="2-digit" minute="2-digit" />
+                            <aura:set attribute="else">
+                                <lightning:formattedRichText class="wrap_text grpImg" value="{!v.fieldvalue}"></lightning:formattedRichText> 
+                            </aura:set>                
+                        </aura:if> 
+                    </aura:set>
+                </aura:if>
+                
+                
+            </aura:if>
+                
+                       
+        </aura:if>
+        <aura:if isTrue="{!not(empty(v.recId))}">
+            <!-- FOR Record Links -->
+            <a href="" data-rec-id="{!v.recId}" onclick="{!c.navigateToDetail}">
+                <lightning:formattedText class="wrap_text" value="{!v.fieldvalue}"></lightning:formattedText>
+            </a>        
+        </aura:if>
+    </span>
+    
+</aura:component>

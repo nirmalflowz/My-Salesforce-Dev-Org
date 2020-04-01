@@ -1,0 +1,544 @@
+<aura:component  implements="force:appHostable,forceCommunity:availableForAllPageTypes" 
+                access="global" controller="ListViewController">
+	
+    <!--<aura:registerEvent name="massUpdateEvent" type="c:CasesMassUpdateEvent"/>
+
+    <aura:handler event="c:CasesMassUpdateCloseEvent" action="{!c.closeDlPopup}"/>-->
+    
+    <aura:handler name="init" value="{!this}" action="{!c.doInit}"/>
+    
+    <aura:attribute name="Spinner" type="boolean" default="false"/>
+    <aura:attribute name="DetailSpinner" type="boolean" default="false"/>
+    
+    <aura:attribute name="MetaInfo" type="object"/>
+    <aura:attribute name="selectedViewId" type="String"/>
+    <aura:attribute name="CasesData" type="object"/>
+    <aura:attribute name="CaseRecord" type="object"/>
+    
+    <!-- Pagination Attributes --> 
+    <aura:attribute name="currentPage" type="Integer" default='0' />
+    <aura:attribute name="totalPages" type="Integer" default='0' />
+    <aura:attribute name="totalrecords" type="Integer" default='0' />
+    <aura:attribute name="recordsPerPage" type="Integer" default='25' />
+    <aura:attribute name="sortColumn" type="object" />    
+    <aura:attribute name="isAscending" type="boolean" default="true"/>  
+
+    <aura:attribute name='casesIds' type='String[]' />
+    <aura:attribute name='ModalBoxCmp' type='boolean' default='false' />
+
+    <aura:attribute name="isEditMode" type="boolean" default="false"/>
+    <aura:attribute name="recordIdToEdit" type="String" default=""/>
+    <aura:attribute name="columnToEdit" type="String" default=""/>
+    <aura:attribute name="defaultListViewData" type="Map" default="{ title : '', developerName: '', visibility : 'PRIVATE' }"/>
+    <aura:attribute name="newListView" type="Map" default="{ title : '', developerName: '', visibility : 'PRIVATE' }"/>
+    
+    <aura:attribute name="listCaseFieldOptions" type="List" default="[]"/>
+    <aura:attribute name="selectedCaseFieldItems" type="List" default="[]"/>
+    
+    <aura:attribute name="selectedLookUpRecords" type="sObject[]" default="[]"/>
+    
+    <article class="slds-card">
+        <div class="slds-page-header slds-page-header_record-home">
+            <div class="slds-page-header__row">
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__figure">
+                            <span class="slds-icon_container">
+                                <lightning:icon iconName="action:new_case" size="small"/>
+                            </span>
+                        </div>
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <span>Cases</span>
+                                        <lightning:select label="" value="{!v.selectedViewId}" onchange="{!c.handleListViewChange}" class="selectTitle">
+                                            <option value="">- Select List View -</option>
+                                            <aura:iteration items="{!v.MetaInfo.ListViewsOptions}" var="view">
+                                                <option value="{!view.Id}" text="{!view.Name}" selected="{!view.Id == v.selectedViewId}"></option>
+                                            </aura:iteration>
+                                        </lightning:select>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__control">
+                        <ul class="slds-button-group-list">
+                            <li>
+                                <button class="slds-button slds-button_neutral" onclick="{!c.createNewCaseRecord}">New</button>
+                            </li>
+                            <li>
+                                <button class="slds-button slds-button_neutral" onclick="{!c.handleMassUpdate}">Mass Update</button>
+                            </li>
+                            <li>
+                                <button class="slds-button slds-button_neutral" onclick="{!c.refreshView}" title="Refresh">
+                                	<lightning:icon iconName="utility:refresh" size="x-small"/>
+                                </button>
+                            </li>
+                            <li>
+                            	<div aura:id="settingsMenu" class="slds-dropdown-trigger slds-dropdown-trigger_click" 
+                                     onclick="{!c.toggleSettingsMenu}">
+                                    <button class="slds-button slds-button_icon slds-button_icon-border-filled" 
+                                            aria-haspopup="true" title="Show More">
+                                    	<lightning:icon iconName="utility:settings" size="x-small"/>
+                                    	<span class="slds-assistive-text">Show More</span>
+                                    </button>
+                                    <div class="slds-dropdown slds-dropdown_right slds-dropdown_small">
+                                        <ul class="slds-dropdown__list" role="menu" aria-label="Show More">
+                                            <li class="slds-dropdown__header slds-truncate" title="List View Controls" role="separator">
+                                            	<span class="slds-text-title_caps">List View Controls</span>
+                                            </li>
+                                            <li class="slds-dropdown__item" role="presentation">
+                                                <a href="javascript:void(0);" role="menuitem" tabindex="0" 
+                                                   onclick="{!c.toggleModal}" data-modalid="newListViewModal" 
+                                                   data-backdropid="modalBackdrop">
+                                                    <span class="slds-truncate" title="New List View">New</span>
+                                                </a>
+                                            </li>
+                                            <li class="slds-dropdown__item" role="presentation">
+                                                <a href="javascript:void(0);" role="menuitem" tabindex="-1" onclick="{!c.toggleModal}" 
+                                                   data-modalid="manageListViewFieldsModal" data-backdropid="modalBackdrop">
+                                                	<span class="slds-truncate" title="Select Fields to Display">Select Fields to Display</span>
+                                                </a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                            	</div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+        
+        
+        <lightning:recordEditForm aura:id="recordViewForm"
+                                     recordId="{!v.recordIdToEdit}"
+                                     onsubmit="{!c.handleInlineEditSubmit}"
+            						 onsuccess="{!c.handleInlineEditSuccess}"
+                                     onerror = "{!c.handleInlineEditError}" 
+                                     objectApiName="Case">
+    	<lightning:messages />
+        
+        
+        
+        <div class="slds-card__body tableContainer">
+            <aura:if isTrue="{!v.totalrecords > 0}">
+                <div class="slds-grid tableTopGrp">
+                    <span class="slds-text-title">
+                        <aura:if isTrue="{! lessthan(v.currentPage * v.recordsPerPage , v.totalrecords ) }">
+                            {!(v.currentPage - 1) * v.recordsPerPage + 1}  - {!v.currentPage * v.recordsPerPage}  Of {!v.totalrecords} 
+                            <aura:set attribute="else">
+                                {!(v.currentPage - 1) * v.recordsPerPage + 1}  - {!v.totalrecords}  Of {!v.totalrecords}
+                            </aura:set>
+                        </aura:if>
+                        records shown • Sorted by : {!v.sortColumn.Label} 
+                    </span>                
+                    <lightning:select name="Records Per Page" label="Records Per Page"
+                                      value="{!v.recordsPerPage}" onchange="{!c.onRecordSizeChange}" class="smlInput">
+                        <option value="25" selected="true">25</option>
+                        <option value="50">50</option>
+                        <option value="100">100</option>
+                    </lightning:select>
+                </div>
+                
+                <table class="slds-table slds-table_cell-buffer slds-no-row-hover slds-table_bordered slds-table_striped tableStyle" role="grid">
+                    <thead>
+                        <tr class="slds-line-height_reset">
+                            
+                            <th class="slds-text-title_caps with-padding" scope="col">
+                                <div class="slds-truncate" >
+                                    <!--<lightning:input type="checkbox" label="Select All" onchange="{!c.handleSelectAllCases}" aura:id="check-all" />-->
+                                    <ui:inputCheckbox aura:id="check-all" label="" change="{!c.handleSelectAllCases}" />
+
+                                </div>
+                            </th>
+                            
+                            <aura:iteration items="{!v.CasesData.ListColumns}" var="column">  
+                                <aura:if isTrue="{!not(column.hidden)}">
+                                    
+                                    <aura:if isTrue="{!column.sortable}">
+                                        <th aria-sort="none" class="slds-is-sortable slds-is-resizable slds-text-title_caps" aria-label="Name" scope="col">
+                                            <a class="slds-th__action slds-text-link_reset align_space" onclick="{!c.applySorting}" 
+                                               role="button" tabindex="-1" data-sort-column= "{!column.fieldNameOrPath}" data-sort-column-label= "{!column.label}" >
+                                                <span class="slds-assistive-text">Sort by: </span>
+                                                <span class="slds-truncate" title="{!column.label}">{!column.label}</span>
+                                                <aura:if isTrue="{!v.sortColumn.Name == column.fieldNameOrPath}">
+                                                    <div class="slds-icon_container">
+                                                        <lightning:icon iconName="{! if(v.isAscending, 'utility:arrowup', 'utility:arrowdown')}" size="x-small"/>
+                                                    </div>
+                                                </aura:if>
+                                            </a>
+                                        </th>
+                                        <aura:set attribute="else">
+                                            <th class="slds-text-title_caps" scope="col">
+                                                <div class="slds-truncate" title="{!column.label}">{!column.label}</div>
+                                            </th> 
+                                        </aura:set>
+                                    </aura:if>
+                                </aura:if>
+                            </aura:iteration>                        
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <aura:iteration items="{!v.CasesData.ListCases}" var="case" indexVar="indexIterator">                               
+                            <tr class="slds-hint-parent">
+                                <td class="slds-cell-edit">
+                                    
+                                    <lightning:input type="checkbox" label="{!add(mult(v.recordsPerPage, sub(v.currentPage,1)), indexIterator + 1)}"
+                                                     checked="{!case.isSelected}" onchange="{!c.checkSelectAll}" />
+                                </td>
+                                <aura:iteration items="{!v.CasesData.ListColumns}" var="column">     
+                                    <aura:if isTrue="{!not(column.hidden)}">
+                                        <td class="slds-cell-edit" data-label="{!column.label}" role="gridcell" ondblclick="{!c.handelInlineEdit}"
+                                            data-column-record="{!column.fieldApiName+'-'+case.Id+'-'+column.isUpdatable}">
+                                            <div class="slds-truncate" style="overflow:visible;">
+                                                <aura:if isTrue="{!equals(column.fieldNameOrPath, 'CaseNumber')}">                
+                                                    <!--  For CASE Record Link -->
+                                                    <span class="caseNumber">
+                                                        <a onmouseover="{!c.showDetails}" href="{!'/'+ case.Id}" data-rec-id="{!case.Id}" >
+                                                            <lightning:formattedText class="wrap_text" value="{!case.CaseNumber}"></lightning:formattedText>
+                                                        </a>
+                                                        <!-- Detail Slide Contents-->
+                                                        <!--<section class="case_details slds-popover slds-nubbin_left" >
+                                                            <aura:if isTrue="{!v.DetailSpinner}">
+                                                                <div class="slds-spinner_container ">
+                                                                    <div role="status" class="slds-spinner slds-spinner_small slds-spinner_brand">
+                                                                        <span class="slds-assistive-text">Loading</span>
+                                                                        <div class="slds-spinner__dot-a"></div>
+                                                                        <div class="slds-spinner__dot-b"></div>
+                                                                    </div>
+                                                                </div>
+                                                            </aura:if>
+                                                            
+                                                            <button class="slds-button slds-button_icon slds-button_icon-small slds-float_right slds-popover__close slds-button_icon" 
+                                                                    title="edit record" onclick="{!c.showEditForm}">
+                                                                <lightning:icon iconName="utility:edit" size="x-small"/>
+                                                                <span class="slds-assistive-text">edit</span>
+                                                            </button>
+                                                            <header class="slds-popover__header">
+                                                                <h2 id="dialog-heading-id-12" class="slds-text-heading_small">Subject - {!v.CaseRecord.Subject}</h2>
+                                                            </header>
+                                                            <div class="slds-popover__body" >
+                                                                
+                                                                <div class="slds-grid slds-gutters">
+                                                                    <div class="slds-col">
+                                                                        <div class="slds-form-element slds-form-element_readonly">
+                                                                            <span class="slds-form-element__label">Origin</span>
+                                                                            <div class="slds-form-element__control">
+                                                                                <div class="slds-form-element__static">{!v.CaseRecord.Origin}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="slds-form-element slds-form-element_readonly">
+                                                                            <span class="slds-form-element__label">Status</span>
+                                                                            <div class="slds-form-element__control">
+                                                                                <div class="slds-form-element__static">{!v.CaseRecord.Status}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="slds-col">
+                                                                        <div class="slds-form-element slds-form-element_readonly">
+                                                                            <span class="slds-form-element__label">Case Number</span>
+                                                                            <div class="slds-form-element__control">
+                                                                                <div class="slds-form-element__static">{!v.CaseRecord.CaseNumber}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="slds-form-element slds-form-element_readonly">
+                                                                            <span class="slds-form-element__label">Priority</span>
+                                                                            <div class="slds-form-element__control">
+                                                                                <div class="slds-form-element__static">{!v.CaseRecord.Priority}</div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                    <div class="slds-col">
+                                                                        <div class="slds-form-element slds-form-element_readonly">
+                                                                            <span class="slds-form-element__label">Account Name</span>
+                                                                            <div class="slds-form-element__control">                                                                        
+                                                                                <a href="" data-rec-id="{!v.CaseRecord.AccountId}" onclick="{!c.navigateToDetail}">
+                                                                                    {!v.CaseRecord.Account.Name || '-'}
+                                                                                </a>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="slds-form-element slds-form-element_readonly">
+                                                                    <span class="slds-form-element__label">Description</span>
+                                                                    <div class="slds-form-element__control">
+                                                                        <div class="slds-form-element__static">
+                                                                            {!v.CaseRecord.Short_Description__c}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                                <div class="slds-form-element slds-form-element_readonly">
+                                                                    <span class="slds-form-element__label">Last Message</span>
+                                                                    <div class="slds-form-element__control">
+                                                                        <div class="slds-form-element__static">
+                                                                            {!v.CaseRecord.Description}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </section>-->
+                                                        
+                                                        <!--Eidt or lock icon-->
+                                                        <span class="triggerContainer">                                                        	
+                                                            <aura:if isTrue="{!column.isUpdatable}">
+                                                                <button class="slds-button trigger slds-button_icon-border" type="button" onclick="{!c.handelInlineEdit}" 
+                                                                        data-column-record="{!column.fieldApiName+'-'+case.Id+'-'+column.isUpdatable}">
+                                                                    <lightning:icon iconName="utility:edit" size="x-small" class="edt-icon" alternativeText="Edit" />                                                                     
+                                                                </button>
+                                                                <aura:set attribute="else">
+                                                                    <button class="slds-button trigger slds-button_icon-border" type="button" onclick="{!c.handelInlineEdit}" 
+                                                                            data-column-record="{!column.fieldApiName+'-'+case.Id+'-'+column.isUpdatable}">
+                                                                        <lightning:icon iconName="utility:lock" size="x-small" class="lock-icon" /> 
+                                                                    </button>
+                                                                </aura:set>
+                                                            </aura:if>                                                             
+                                                        </span>
+                                                        
+                                                    </span>
+                                                    <aura:set attribute="else">
+                                                        <!-- Other Field Data -->
+                                                        <c:DisplayFieldData record="{!case}" fieldName="{!column.fieldNameOrPath}"   
+                                                                            fieldType="{!column.type}" isEditMode="{!v.isEditMode}"
+                                                                            columnMeta = "{!column}" 
+                                                                            recordIdToEdit = "{!v.recordIdToEdit}" 
+                                                                            columnToEdit="{!v.columnToEdit}"  />
+                                                        
+                                                        <!--Eidt or lock icon-->
+                                                        <span class="triggerContainer">
+                                                        	<aura:if isTrue="{!column.isUpdatable}">
+                                                                <button class="slds-button trigger slds-button_icon-border" type="button" onclick="{!c.handelInlineEdit}" 
+                                                                        data-column-record="{!column.fieldApiName+'-'+case.Id+'-'+column.isUpdatable}">
+                                                                    <lightning:icon iconName="utility:edit" size="x-small" class="edt-icon" alternativeText="Edit" />                                                                     
+                                                                </button>
+                                                                <aura:set attribute="else">
+                                                                    <button class="slds-button trigger slds-button_icon-border" type="button" onclick="{!c.handelInlineEdit}" 
+                                                                            data-column-record="{!column.fieldApiName+'-'+case.Id+'-'+column.isUpdatable}">
+                                                                        <lightning:icon iconName="utility:lock" size="x-small" class="lock-icon" /> 
+                                                                    </button>
+                                                                </aura:set>
+                                                            </aura:if>   
+                                                        </span>
+                                                        
+                                                    </aura:set>                                                
+                                                </aura:if>
+                                            
+                                            </div>
+                                        </td>  
+                                    </aura:if>
+                                </aura:iteration>                                   
+                            </tr>                               
+                        </aura:iteration>
+                        
+                        
+                    </tbody>
+                </table>
+                
+                <aura:set attribute="else">                    
+                    <div id="no-records">
+                        No Cases Present.
+                    </div>
+                </aura:set>
+            </aura:if>
+            
+        </div>
+        
+        <aura:if isTrue="{!v.isEditMode}">
+            <div class="slds-docked-form-footer">
+                <lightning:button variant="brand" type="submit" name="save" label="Save" />
+                <lightning:button type="Buttom" label="Cancel" onclick="{!c.cancelInlineEdit}" />
+            </div>
+        </aura:if>
+        </lightning:recordEditForm>
+        
+        
+        <footer class="slds-card__footer slds-grid">
+            <aura:if isTrue="{!v.totalrecords > 0}">
+                <div id="page-numbers" class="slds-text-title">
+                    <aura:if isTrue="{! lessthan(v.currentPage * v.recordsPerPage , v.totalrecords ) }">
+                    	{!(v.currentPage - 1) * v.recordsPerPage + 1}  - {!v.currentPage * v.recordsPerPage}  Of {!v.totalrecords}
+                        <aura:set attribute="else">
+                            {!(v.currentPage - 1) * v.recordsPerPage + 1}  - {!v.totalrecords}  Of {!v.totalrecords}
+                        </aura:set>
+                    </aura:if>
+                </div>
+            </aura:if>
+            <div class="buttons-panel">
+                <aura:if isTrue="{! greaterthan(v.currentPage,1)}">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.firstpage}">First</button>
+                </aura:if>
+                <aura:if isTrue="{! greaterthan(sub(v.currentPage,1) ,0)}">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.prevPage}">Prev</button>
+                </aura:if>        
+                <aura:if isTrue="{! lessthanorequal(add(v.currentPage,1),v.totalPages)}">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.nextPage}">Next</button>
+                </aura:if>            
+                <aura:if isTrue="{! lessthan(v.currentPage,v.totalPages)}">
+                    <button class="slds-button slds-button_neutral" onclick="{!c.lastPage}">Last</button>
+                </aura:if>
+            </div>
+            
+        </footer>
+    </article>
+    
+    <!--loading spinner -->
+    <aura:if isTrue="{!v.Spinner}">
+        <div class="slds-spinner_container slds-is-fixed ">
+            <div role="status" class="slds-spinner slds-spinner_medium slds-spinner_brand">
+                <span class="slds-assistive-text">Loading</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+
+    <!--<c:CasesMassUpdate display="{!v.ModalBoxCmp}" />-->
+    
+    <!-- New List View Component -->
+    <section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" 
+             aria-describedby="modal-content-id-1" class="slds-modal" aura:id="newListViewModal">
+        <div class="slds-modal__container">
+          <header class="slds-modal__header">
+            <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" 
+                    onclick="{!c.toggleModal}" data-modalid="newListViewModal" 
+                                                   data-backdropid="modalBackdrop">
+              <lightning:icon iconName="utility:close" size="x-small" /> 
+              <span class="slds-assistive-text">Close</span>
+            </button>
+            <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">New List View</h2>
+          </header>
+          <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+            <!-- Modal body start -->
+          	<div class="slds-m-bottom_x-large">
+
+                <div class="slds-form-element">
+                  <div class="slds-form-element__control">
+                  	<lightning:input name="title" maxlength="40" pattern=".*\S.*" aura:id="listViewField" 
+                                     required="true" type="text" label="List Name" value="{!v.newListView.title}" />
+                  </div>
+                </div>
+            
+                <div class="slds-p-top_medium">
+                    <div class="slds-form-element">
+                        <div class="slds-form-element__control">
+                            <!--add custom label for input field-->
+                            <label class="slds-form-element__label" style="margin-right: 0.5rem;">
+                                <abbr title="required" class="slds-required" lightning-input_input="">*</abbr>
+                                List API Name</label>
+                            <!--lightning help text for input field-->
+                            <lightning:helptext content="The list API name must begin with a letter and use only alphanumeric 
+                                                         characters and underscores. The name can’t end with an underscore or 
+                                                         contain two consecutive underscores." class="customIcon"/> 
+                            <!-- use variant="label-hidden" for hide standard label-->
+                            <lightning:input aura:id="listViewField" required="true" type="text" 
+                                             label="List API Name" maxlength="80" name="developerName" 
+                                             value="{!v.newListView.developerName}" variant="label-hidden"  />
+                            
+                            
+                        </div>
+                    </div>
+                    
+                    
+                    
+                </div>
+            
+            </div>
+            
+            <div class="visibilitySection slds-p-top_xx-small">
+                <fieldset class="slds-form-element">
+                  <legend class="slds-form-element__legend slds-form-element__label">Who sees this list view?</legend>
+                  
+                    <div>
+                    	<lightning:input type="radio" label="Only I can see this list view" name="visibility" value="PRIVATE" 
+                                     checked="true" onchange="{!c.handleVisibilityRadioClick}" aura:id="listViewField" />
+                    </div>                   
+                   
+                    <div>
+                        <lightning:input type="radio" label="All users can see this list view" name="visibility" value="GLOBAL"
+                                         onchange="{!c.handleVisibilityRadioClick}" variant="label-hidden" class="inline-input"
+                                         aura:id="listViewField" />
+                        <!--add custom label for input field-->
+                        <label class="slds-form-element__label" style="margin-right: 0.5rem;">
+                            All users can see this list view
+                        </label>
+                        <!--lightning help text for input field-->
+                        <lightning:helptext content="Including Partner and Customer Portal users" class="customIcon"/> 
+                    </div>
+                    
+                    <div>
+                        <!-- use variant="label-hidden" for hide standard label-->
+                        <lightning:input type="radio" label="Share list view with groups of users" name="visibility" 
+                                         value="SHARED" onchange="{!c.handleVisibilityRadioClick}" variant="label-hidden" 
+                                         class="inline-input" aura:id="listViewField" />
+                        
+                        <!--add custom label for input field-->
+                        <label class="slds-form-element__label" style="margin-right: 0.5rem;">
+                            Share list view with groups of users
+                        </label>
+                        <!--lightning help text for input field-->
+                        <lightning:helptext content="If you don't select any group, this list will be private" class="customIcon"/> 
+                    </div>
+                    <div class="select-groups" aura:id="selectGroups">
+                        <!--<c:MultiSelectLookup objectAPIName="group"
+                                   IconName="standard:account"
+                                   lstSelectedRecords="{!v.selectedLookUpRecords}"
+                                   label="Public Groups"/>-->
+                    </div>
+                </fieldset>
+            </div>
+            <!-- Modal body end -->
+          </div>
+          <footer class="slds-modal__footer">
+            <button class="slds-button slds-button_neutral" onclick="{!c.toggleModal}" data-modalid="newListViewModal" 
+                                                   data-backdropid="modalBackdrop">Cancel</button>
+            <button class="slds-button slds-button_brand" onclick="{!c.saveNewListView}">Save</button>
+          </footer>
+        	</div>
+      	</section>
+    	
+    	<!-- Select Fields to Display modal -->
+    	
+    	<section role="dialog" tabindex="-1" aria-labelledby="modal-heading-01" aria-modal="true" 
+             aria-describedby="modal-content-id-1" class="slds-modal" aura:id="manageListViewFieldsModal">
+          <div class="slds-modal__container">
+            <header class="slds-modal__header">
+              <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" 
+                      onclick="{!c.toggleModal}" data-modalid="manageListViewFieldsModal" 
+                      data-backdropid="modalBackdrop">
+                <lightning:icon iconName="utility:close" size="x-small" /> 
+                <span class="slds-assistive-text">Close</span>
+              </button>
+              <h2 id="modal-heading-01" class="slds-text-heading_medium slds-hyphenate">Select Fields to Display</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium" id="modal-content-id-1">
+              <!-- Modal body start -->
+              <div class="slds-m-bottom_x-large">
+              	<lightning:dualListbox aura:id="selectFields"
+                           name="selectFields"
+                           label= "Select Fields" 
+                           sourceLabel="Available Fields" 
+                           selectedLabel="Selected Fields" 
+                           options="{! v.listCaseFieldOptions }"
+                           value="{! v.selectedCaseFieldItems }"
+                           onchange="{!c.handleLviewFiledsToDisplayChange}" />
+              </div>     
+              <!-- Modal body end -->
+            </div>
+            <footer class="slds-modal__footer">
+              <button class="slds-button slds-button_neutral" onclick="{!c.toggleModal}"
+                      data-modalid="manageListViewFieldsModal" data-backdropid="modalBackdrop">Cancel</button>
+              <button class="slds-button slds-button_brand" onclick="{!c.saveListViewFields}">Save</button>
+            </footer>
+          </div>
+        </section>
+    
+    
+      <div class="slds-backdrop" aura:id="modalBackdrop"></div>
+</aura:component>

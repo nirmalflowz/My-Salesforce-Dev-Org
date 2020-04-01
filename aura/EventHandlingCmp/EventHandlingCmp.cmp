@@ -1,0 +1,174 @@
+<aura:component >
+    <ltng:require styles="{!join(',', $Resource.redips + '/style.css')
+                          }" 
+                 scripts="{!join(',', 
+                          $Resource.redips + '/redips-drag-min.js')
+                          }" afterScriptsLoaded="{!c.scriptsLoaded}"/>
+    <aura:registerEvent name="ampEvent" type="c:ceEvent"/>
+    <aura:attribute name="gridOptions" type="String"/>
+    <!--<aura:attribute name="aggrid" type="String" default="{!$Resource.aggrid + '/ag-grid-community.min.noStyle.js'}"/>-->
+    <!--<h1>Hello from ag-grid!</h1>
+<button onclick="{!c.getSelectedRowData}">Get Selected</button>  
+<div aura:id="myGrid" style="height: 600px;width:500px;" class="ag-theme-balham"></div>-->
+    <!-- tables inside this DIV could contain drag-able content  -->
+    
+    <lightning:input type="color" label="Color" value="#EEEEEE"></lightning:input>
+
+		<div id="redips-drag">
+			
+			<!-- table1 -->
+			<table id="table1">
+				<colgroup>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+				</colgroup>
+				<tbody>
+					<tr>
+						<td><div class="redips-drag"><input type="text" class="test1"></input><button type="button" onclick="{!c.getText}">Get text</button></div></td>
+						<td><div class="redips-drag">B</div></td>
+						<td><div class="redips-drag">C</div></td>
+						<td><div class="redips-drag">D</div></td>
+						<td><div class="redips-drag">E</div></td>
+						<td><div class="redips-drag">F</div></td>
+					</tr>
+					<tr>
+						<td><div class="redips-drag">G</div></td>
+						<td><div class="redips-drag">H</div></td>
+						<td><div class="redips-drag">I</div></td>
+						<td><div class="redips-drag">J</div></td>
+						<td><div class="redips-drag">K</div></td>
+						<td><div class="redips-drag">L</div></td>
+					</tr>
+					<tr>
+						<td><div class="redips-drag">M</div></td>
+						<td><div class="redips-drag">N</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><div class="redips-drag">O</div></td>
+						<td><div class="redips-drag">P</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td><div class="redips-drag">Q</div></td>
+						<td><div class="redips-drag">R</div></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- table2 -->
+			<table id="table2" style="display: none">
+				<colgroup>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+				</colgroup>
+				<tbody>
+					<tr>
+						<td><div class="redips-drag">A</div></td>
+						<td><div class="redips-drag">B</div></td>
+						<td><div class="redips-drag">C</div></td>
+						<td><div class="redips-drag">D</div></td>
+						<td><div class="redips-drag">E</div></td>
+						<td><div class="redips-drag">F</div></td>
+					</tr>
+					<tr>
+						<td rowspan="3"></td>
+						<td></td>
+						<td colspan="2"></td>
+						<td></td>
+						<td rowspan="3"></td>
+					</tr>
+					<tr>
+						<td colspan="4"></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td colspan="2"></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+				</tbody>
+			</table>
+
+			<!-- table3 -->
+			<table id="table3" style="display: none">
+				<colgroup>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+					<col width="100"/>
+				</colgroup>
+				<tbody>
+					<tr>
+						<td class="redips-mark"></td>
+						<td><div class="redips-drag"></div></td>
+						<td><div class="redips-drag">B</div></td>
+						<td><div class="redips-drag">C</div></td>
+						<td><div class="redips-drag">D</div></td>
+						<td class="redips-mark"></td>
+					</tr>
+					<tr>
+						<td><div class="redips-drag">E</div></td>
+						<td><div class="redips-drag">F</div></td>
+						<td class="redips-mark"></td>
+						<td class="redips-mark"></td>
+						<td><div class="redips-drag">G</div></td>
+						<td><div class="redips-drag">H</div></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td></td>
+						<td></td>
+						<td class="redips-mark"></td>
+						<td class="redips-mark"></td>
+						<td></td>
+						<td></td>
+					</tr>
+					<tr>
+						<td class="redips-mark"></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td></td>
+						<td class="redips-mark"></td>
+					</tr>
+				</tbody>
+			</table>
+
+			
+		</div>
+</aura:component>

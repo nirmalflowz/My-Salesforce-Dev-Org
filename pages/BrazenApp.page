@@ -1,0 +1,65 @@
+<apex:page standardStylesheets="false" sidebar="false" showHeader="false">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="x-ua-compatible" content="ie=edge"/>
+  <title>Sign In</title>
+        <meta name="description" content=""/>
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
+
+        <link rel="manifest" href="site.webmanifest"/>
+        <link rel="apple-touch-icon" href="icon.png"/>
+  <!-- Place favicon.ico in the root directory -->
+
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0-rc.2/css/materialize.min.css"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.min.css"/>
+        <link rel="stylesheet" href="{!URLFOR($Resource.educationappresources, 'css/normalize.css')}"/>
+        <link rel="stylesheet" href="{!URLFOR($Resource.educationappresources, 'css/main.css')}"/>
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
+</head>
+
+<body class="login">
+  <!--[if lte IE 9]>
+    <p class="browserupgrade">You are using an <strong>outdated</strong> browser. Please <a href="https://browsehappy.com/">upgrade your browser</a> to improve your experience and security.</p>
+  <![endif]-->
+
+  <!-- Add your site or application content here -->
+  
+  <div ng-app="EducationDemocratization">
+	            <div ng-controller="VotingPageController">
+	            
+	                <ng-view></ng-view> 
+	                
+	            </div>
+        	</div>
+  <script src="{!URLFOR($Resource.educationappresources, 'js/vendor/modernizr-3.6.0.min.js')}"></script>
+    <script src="{!URLFOR($Resource.educationappresources, 'js/vendor/jquery-3.3.1.min.js')}"></script>
+  
+  <script src="{!URLFOR($Resource.educationappresources, 'js/plugins.js')}"></script>
+  <script src="{!URLFOR($Resource.educationappresources, 'js/main.js')}"></script>
+<apex:includeScript value="{!URLFOR($Resource.angularjs, 'angular.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.angularjs, 'angular-route.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.angularjs, 'angular-animate.min.js')}"/>
+        <apex:includeScript value="{!URLFOR($Resource.angularjs, 'angular-sanitize.min.js')}"/>
+  
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js"></script>
+    <script>
+    	window.loginView =   "{!$Resource.login}" ;
+    	window.lessonView = "{!$Resource.lessons}";
+    	window.logo = "{!URLFOR($Resource.educationappresources, 'img/logo-light.png')}";
+    	window.schoollogo = "{!URLFOR($Resource.educationappresources, 'img/school_logo.png')}";
+    </script>
+    <apex:includeScript value="{!$Resource.BrazenAppJs}"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.js"></script>
+
+  <script type="text/javascript">
+    $(document).ready(function(){
+            $('.main_content').slick({
+              dots: true,
+              arrows: false
+            });
+          });
+  </script>
+        
+</body>
+</apex:page>

@@ -1,0 +1,94 @@
+<aura:application extends="force:slds">
+	<aura:attribute name="rawData" type="String" default=""/>
+    <aura:attribute name="table" type="object" />
+    <aura:attribute name="showError" type="Boolean"/>
+    <aura:if isTrue="{!v.showError}">
+    	<div class="demo-only" style="height:4rem">
+        <div class="slds-notify_container slds-is-relative">
+            <div class="slds-notify slds-notify_toast slds-theme_error" role="status">
+                <span class="slds-assistive-text">error</span>
+                <span class="slds-icon_container slds-icon-utility-error slds-m-right_small slds-no-flex slds-align-top" title="Description of icon when needed">
+                    
+                </span>
+                <div class="slds-notify__content">
+                    <h2 class="slds-text-heading_small ">Please enter excel data.</h2>
+                </div>
+                <div class="slds-notify__close">
+                    <button onclick="{!c.hideToast}" class="slds-button slds-button_icon slds-button_icon-inverse" title="Close">
+                        x
+                        <span class="slds-assistive-text">Close</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    </aura:if>
+    
+    <article class="slds-card" style="width: 80%; margin: 0 auto; margin-top: 50px;">
+        <div class="slds-card__header slds-grid">
+            <header class="slds-media slds-media_center slds-has-flexi-truncate">
+                <div class="slds-media__figure">
+                    <span class="slds-icon_container slds-icon-standard-account" title="account">
+                        
+                        <span class="slds-assistive-text">account</span>
+                    </span>
+                </div>
+                <div class="slds-media__body">
+                    <h2 class="slds-card__header-title">
+                        <a href="javascript:void(0);" class="slds-card__header-link slds-truncate" title="Parse Excel Data">
+                            <span>Parse Excel Data</span>
+                        </a>
+                    </h2>
+                </div>
+                
+            </header>
+        </div><hr/>
+        <div class="slds-card__body slds-card__body_inner">
+            <div class="row" style="padding-bottom: 30px;">
+                <div style="width:60%;">
+                    <lightning:textarea name="input1" value="{!v.rawData}" placeholder="paste data here from excel..."/>
+                </div>
+                
+                
+            </div>
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_striped">
+                <thead>
+                    <aura:iteration items="{!v.table}" var="row" indexVar="index">
+                        <aura:if isTrue="{!index == 0}">
+                            <tr class="slds-line-height_reset">
+                                <aura:iteration items="{!row}" var="column" indexVar="index1">
+                                    <th class="" scope="col">
+                                        <div class="slds-truncate" title="{!column}">{!column}</div>
+                                    </th>
+                                </aura:iteration>
+                            </tr>
+                        </aura:if>
+                        
+                    </aura:iteration>
+                    
+                </thead>
+                <tbody>
+                    <aura:iteration items="{!v.table}" var="row" indexVar="index">
+                        <aura:if isTrue="{!index != 0}">
+                            <tr class="slds-line-height_reset">
+                                <aura:iteration items="{!row}" var="column" indexVar="index1">
+                                    <td class="" scope="col">
+                                        <div class="slds-truncate" title="{!column}">{!column}</div>
+                                    </td>
+                                </aura:iteration>
+                            </tr>
+                        </aura:if>
+                        
+                    </aura:iteration>
+                    
+                </tbody>
+            </table>      
+        </div>
+        <footer class="slds-card__footer">
+            <div>
+                <lightning:button variant="brand" label="Parse" title="Parse" onclick="{! c.parse }" />
+                <lightning:button label="Clear" title="Clear" onclick="{! c.clearInput }"/>
+            </div>
+        </footer>
+    </article>
+</aura:application>

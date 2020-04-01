@@ -1,0 +1,35 @@
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+      <div class="container">
+        <a class="navbar-brand" href="#">S-Cart</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto">
+            <li class="nav-item" ng-repeat="menu in menus" ng-class="{active:activeItem===menu.id}">
+            	
+              <a ng-class="{'nav-link':menu.id!='itemcount'}" href="{{menu.url}}" ng-click="setActiveItem(menu)">{{menu.title}}
+                <span id="itemCount" ng-show="menu.id==='itemcount'">{{cartCollection.length}}</span>
+                <i class="fa fa-shopping-cart" aria-hidden="true" ng-show="menu.id==='cart'"></i>
+              </a>
+            </li>
+            <!--<li class="nav-item">
+              <a class="nav-link" href="#/aboutus">About</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#/services">Services</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#/contactus">Contact</a>
+            </li>
+              <li class="nav-item">
+              <a class="nav-link" href="#/cart"><i class="fa fa-shopping-cart" aria-hidden="true"></i></a>
+                  
+            </li>
+              <li><span id="itemCount">{{cartCollection.length}}</span></li>-->
+              
+          </ul>
+          
+        </div>
+      </div>
+    </nav>

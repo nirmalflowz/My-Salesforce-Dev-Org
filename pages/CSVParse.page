@@ -1,0 +1,38 @@
+<apex:page >
+    <apex:stylesheet value="{!URLFOR($Resource.angularjs, 'ng-table.min.css')}"/>
+    <div ng-app="QuoteLineApp">
+        <div ng-controller="QuoteLineAppController">
+            <input type="file" name="files[]" id="files" multiple="true" ng-model="files"/>
+            <button type="button" ng-click="parseCsvFiles()">
+                Parse
+            </button>
+            
+            <div>
+                <table ng-table="tableParams" class="table auctionTable" show-filter="true" ng-init="getProducts()" border="0" cellspacing="0" cellpadding="0">
+                    <tr ng-repeat="product in $data"  ng-disabled="$data.length == 0" ng-if="$index != 0">
+                        <td title="'Group Name'" data-label="Group Name" sortable="'GroupName'">
+                            <input type="text" value="{{product.GroupName}}"/>
+                        </td>
+                        <td title="'Group code'" data-label="Group code" sortable="'Groupcode'">
+                            <input type="text" value="{{product.Groupcode}}"/>
+                        </td>
+                        <td title="'Group Owner'" data-label="Group Owner"> 
+                            <input type="text" value="{{product.GroupOwner}}"/>
+                        </td>
+                         <td title="'Group Category ID'" data-label="Group Category ID"> 
+                            <input type="text" value="{{product.GroupCategoryID}}"/>
+                        </td>
+                    </tr>
+                    <tr ng-show="$data.length == 0">
+                        <td colspan="3"> 
+                            No Products Found 
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+    </div>
+    <apex:includeScript value="{!URLFOR($Resource.angularjs, 'angular.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.angularjs, 'ng-table.min.js')}"/>
+    <apex:includeScript value="{!$Resource.CSVParseAppJs}"/>
+</apex:page>

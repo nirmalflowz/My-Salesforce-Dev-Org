@@ -1,0 +1,250 @@
+<apex:page >
+    <head>
+<style>
+table {
+  font-family: arial, sans-serif;
+  border-collapse: collapse;
+  width: 100%;
+}
+
+td, th {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+tr:nth-child(even) {
+  background-color: #dddddd;
+}
+</style>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/crypto-js.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/hmac-sha256.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.9-1/enc-base64.min.js"></script>
+</head>
+	<apex:includeScript value="{!URLFOR($Resource.angularjs, 'angular.min.js')}"/>
+    
+	<div id="app" ng-app="app" ng-controller="appController">
+	  <p>{{ message }}</p>
+	  <textarea rows='6' cols='100' ng-model="rawData" ng-hide="hideInput"></textarea>
+	  <button ng-click="parse()" ng-hide="hideInput">Parse</button>  	
+	<button ng-click="clear()">Clear</button>
+        <button ng-click="createJwtToken()">JWT Token</button>
+	<table ng-hide="hideTable">
+		<thead>
+			<tr ng-repeat="row in table" ng-if="$index == 0">
+                <th ng-repeat="column in row">{{column}}</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr ng-repeat="row in table" ng-if="$index != 0">
+                <td ng-repeat="column in row">{{column}}</td>
+			</tr>
+		</tbody>
+	</table>
+	</div>	
+	<script>
+    var app = angular.module("app",[]);
+    function appController($scope){
+        $scope.rawData= "";
+        $scope.table = [];
+        function parseRawData(data){
+            var rows = data.split('\n');
+            for (i = 0; i < rows.length; i++) {		   	   
+                rows[i] = rows[i].split('\t');		
+            }
+            //Assuming First Row Is Always Header
+            var headers = rows[0];
+            
+            var headersMetadata = [];     
+            
+            var mergedColumnsCounter = 1;
+            for(var i = headers.length -1; i >= 0; i--){
+                var value =  headers[i];
+                if(value == ""){
+                    mergedColumnsCounter++;
+                }else{     
+                    headersMetadata.push({Value: value, Columns: mergedColumnsCounter});
+                    mergedColumnsCounter = 1;
+                }   
+            }
+            
+            headersMetadata = headersMetadata.reverse();
+            
+            //Skip Header Row and Get the Data
+            var table = [];
+            var headerRow = [];
+            headersMetadata.forEach(function(header){		
+                headerRow.push(header.Value);
+            });
+            
+            table.push(headerRow);
+            
+            for(var i= 1; i< rows.length; i++){
+                var row = [];
+                var columns = rows[i];      
+                var index = 0;
+                headersMetadata.forEach(function(header){
+                    var limit = (index == columns.length - 1) ? index + 1 : index + header.Columns;
+                    var value = "";
+                    for(var j= index; j< limit; j++){
+                        if(columns[j] != ""){
+                            value = columns[j];
+                        }
+                    }
+                    row.push(value);
+                    index = index + header.Columns;
+                });      
+                table.push(row);
+            }
+            console.log(rows);
+            
+            console.log(headersMetadata);
+            
+            console.log(table);
+            
+            return table;
+        }
+        $scope.parse = function(){
+            console.log("will parse");
+            this.table = parseRawData($scope.rawData);
+            $scope.hideInput = true;
+            $scope.hideTable = false;
+        }
+        $scope.clear = function(){
+        	$scope.rawData = "";
+            $scope.hideInput = false;
+            $scope.hideTable = true;
+        }
+        
+        $scope.createJwtToken = function(){
+        	var iss = 'SK5837b1533d2a1ab03f6fc11cac5c847f';
+            var exp = new Date().setSeconds(3600);
+            exp = new Date(exp).getTime() / 1000;
+            var serviceSid = 'IS6fb0537a60934e53b5542f47643e55e3';
+            var segments = [];
+            var headers = {
+            	typ:'JWT',
+                alg:'HS256'
+            };
+            var payload = {
+            	iss : iss,
+                exp : exp,
+                grants : {
+                	identity : 'pdalal@officebeacon.com',
+                    chat:{
+                    	service_sid: serviceSid
+                    }
+                }
+            };
+            
+            var headerBytes = toUTF8Array(headers.toString());
+            var paylodBytes = toUTF8Array(payload.toString());
+            segments.push(URLEncode(headerBytes));
+            segments.push(URLEncode(paylodBytes));
+            
+            var stringToSign = segments.join('.');
+            var bytesToSign = toUTF8Array(stringToSign);
+            var hash = CryptoJS.HmacSHA256("Message", "IFXe4HSxD496VxC9YPPJxcjwZdBQV0Im");
+            var hashHex = hash.toString(CryptoJS.enc.hex);
+            var signature = GetHexFromString(hashHex);
+            segments.push(URLEncode(signature));
+            var finalString = segments.join('.');
+            console.log('finalString',finalString);
+        }
+        
+        function GetHexFromString(hashHex) {
+            var stringVal = hashHex;//'8563A578-7402-4567-A6CE-4DE4E0825B021234';
+// Convert the string to UTF 16 little-endian
+// Result: 560530540510650530550560450550520480500450520530540550450650540670690450520680690520690480560500530660480500490500510520
+var utf16le = CryptoJS.enc.Utf8.parse(stringVal);  
+
+// Convert to Sha256 format and get the word array
+var utf16Sha256 = CryptoJS.SHA256(utf16le);
+// Convert the Sha256 word array to Uint8Array to get the 32 byte array just to see the result to ensure it match with the C# function
+// Result: 94,203,69,29,35,202,209,149,121,144,44,6,98,250,141,161,102,7,238,35,228,117,111,236,118,115,51,113,134,72,52,69
+var utf16sha256Array = convertWordArrayToUint8Array(utf16Sha256); 
+
+// Convert the Sha256 to hex (if i'm not mistaken, it's base 16) format
+var hexSha256 = utf16Sha256.toString(CryptoJS.enc.hex);
+
+ // Insert a dash in between 2 characters in the string
+ hexSha256 = hexSha256.replace(/(\S{2})/g, "$1-");
+ // Remove the last dash in the string
+ hexSha256 = hexSha256.replace(/-$/, "");
+
+// Final Result: 5E-CB-45-1D-23-CA-D1-95-79-90-2C-06-62-FA-8D-A1-66-07-EE-23-E4-75-6F-EC-76-73-33-71-86-48-34-45
+return hexSha256.toUpperCase();
+}
+
+function convertWordArrayToUint8Array(wordArray) {
+        var len = wordArray.words.length,
+            u8_array = new Uint8Array(len << 2),
+            offset = 0, word, i
+        ;
+        for (i = 0; i < len; i++) {
+            var word = wordArray.words[i];                
+
+            u8_array[offset++] = word >> 24;
+            u8_array[offset++] = (word >> 16) & 0xff;
+            u8_array[offset++] = (word >> 8) & 0xff;
+            u8_array[offset++] = word & 0xff;                                              
+        }
+        return u8_array;
+    }
+        function URLEncode(str){
+        	var output = btoa(str);
+            output = output.split('=')[0];
+            output = output.replace(/\+/g,'-');
+            output = output.replace(/\//g,'_');
+            return output;
+        }
+        function toUTF8Array(str) {
+            var utf8 = [];
+            for (var i=0; i < str.length; i++) {
+                var charcode = str.charCodeAt(i);
+                if (charcode < 0x80) utf8.push(charcode);
+                else if (charcode < 0x800) {
+                    utf8.push(0xc0 | (charcode >> 6), 
+                              0x80 | (charcode & 0x3f));
+                }
+                    else if (charcode < 0xd800 || charcode >= 0xe000) {
+                        utf8.push(0xe0 | (charcode >> 12), 
+                                  0x80 | ((charcode>>6) & 0x3f), 
+                                  0x80 | (charcode & 0x3f));
+                    }
+                // surrogate pair
+                        else {
+                            i++;
+                            // UTF-16 encodes 0x10000-0x10FFFF by
+                            // subtracting 0x10000 and splitting the
+                            // 20 bits of 0x0-0xFFFFF into two halves
+                            charcode = 0x10000 + (((charcode & 0x3ff)<<10)
+                                                  | (str.charCodeAt(i) & 0x3ff));
+                            utf8.push(0xf0 | (charcode >>18), 
+                                      0x80 | ((charcode>>12) & 0x3f), 
+                                      0x80 | ((charcode>>6) & 0x3f), 
+                                      0x80 | (charcode & 0x3f));
+                        }
+            }
+            return utf8;
+        }
+    }
+    app.controller('appController',appController);
+                    
+                
+    /**new Vue({
+                    el: '#app',
+                    data: {
+                        message: 'Hello Vue.js!',
+                        rawData: "",
+                        table : []
+                    },
+                    methods : {
+                        parse : function(){
+                            console.log("will parse");
+                            this.table = parseRawData(this.rawData);
+                        },  
+                    }
+                });  */          
+    </script>
+</apex:page>

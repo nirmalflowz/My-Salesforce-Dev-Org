@@ -1,0 +1,72 @@
+<apex:page sidebar="false" showHeader="false" standardStylesheets="false">
+<apex:include pageName="resources"/>
+
+    <!--<apex:stylesheet value="{!URLFOR($Resource.bootstrap, 'css/bootstrap.min.css')}"></apex:stylesheet>-->
+    <!--<head>
+         <link href="{!URLFOR($Resource.bootstrap, 'css/bootstrap.css')}" rel="stylesheet" />
+        <link href="{!$Resource.shop_css}" rel="stylesheet" />
+        <link href="{!$Resource.fontawesome_css}" rel="stylesheet" />
+        <link href="{!URLFOR($Resource.toastr_js, 'build/toastr.css')}" rel="stylesheet" /> 
+        
+        <link rel="import" href="{!$Resource.resource}" />
+    </head>-->
+            <div ng-app="myApp" ng-controller="ParentController">
+                   
+                  
+                   <div ng-include="'{!$Resource.header}'"></div>
+                   <div  class="container">
+                      <ng-view></ng-view>
+                  </div> 
+                  <div id="mydiv" ng-show="setLoading">
+    				<img style="width: 50px;height: 50px;" src="{!$Resource.loader}" class="ajax-loader" />
+				  </div>  
+    <!-- /.container -->
+    <div id="main">
+
+        <!-- angular templating -->
+        <!-- this is where content will be injected -->
+        
+
+    </div>
+    <!-- Footer -->
+    <div ng-include="'{!$Resource.footer}'"></div>
+              </div>
+              <!-- <apex:includeScript value="{!URLFOR($Resource.angular, 'angular/angular.min.js')}"/>
+              <apex:includeScript value="{!URLFOR($Resource.angular, 'angular/angular-route.min.js')}"/>
+             <apex:includeScript value="{!URLFOR($Resource.angular, 'angular/angular-sanitize.min.js')}"/>
+              <apex:includeScript value="{!$Resource.jquery_js}"/>
+              <apex:includeScript value="{!URLFOR($Resource.toastr_js, 'toastr.js')}"/>
+               <!--<apex:includeScript value="{!URLFOR($Resource.bootstrap, 'js/bootstrap.min.js')}"/>
+               <apex:includeScript value="{!URLFOR($Resource.bootstrap, 'js/bootstrap.bundle.js')}"/>
+    		<apex:includeScript value="{!URLFOR($Resource.bootstrap, 'js/ui-bootstrap-tpls-2.5.0.min.js')}"/>
+               
+                <script>
+                    window.homeUrl = '{!$Resource.home}';
+                    
+                    	window.products = '{!$Resource.products_json}';
+                    	window.prodDesc = '{!$Resource.productDescription}';
+                    	window.cart = '{!$Resource.cart}';
+                    	window.about = '{!$Resource.about}';
+                    	window.emptyCartImg = '{!URLFOR($Resource.images,"empty_cart_800x600_dribbble.png")}';
+                    	window.slider = {
+                    		slider1:'{!URLFOR($Resource.images,"slider1.jpg")}',
+                    		slider2:'{!URLFOR($Resource.images,"slider2.jpg")}',
+                    		slider3:'{!URLFOR($Resource.images,"slider3.jpg")}'
+                    	};
+                    
+                
+                </script>
+              <apex:includeScript value="{!$Resource.app_js}"/>
+              <apex:includeScript value="{!$Resource.filters}" />
+              <apex:includeScript value="{!$Resource.controller_js}"/>
+              <apex:includeScript value="{!$Resource.directives_js}"/>
+              <apex:includeScript value="{!$Resource.services_js}"/>
+              <apex:includeScript value="{!$Resource.factories_js}"/> -->
+        
+  
+    
+  
+  
+  
+  
+</apex:page>

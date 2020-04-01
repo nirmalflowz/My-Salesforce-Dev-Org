@@ -1,0 +1,331 @@
+<apex:page >
+    <apex:includeScript value="{!URLFOR($Resource.angularjs, 'angular.min.js')}"/>
+    <apex:includeScript value="{!URLFOR($Resource.angularjs, 'jquery.js')}"/>
+    <apex:slds />
+    <div  ng-app="eapp" ng-controller="eappctrl" class="slds-scope">
+        
+        
+        <!--<table id="myTable">
+            <tr>
+                <th>Col1</th>
+                <th>Col2</th>
+            </tr>
+            <tr>
+                <td>First cell in first table. The cell to the right has the second table in it.</td>
+                <td>
+                    
+                    <table>
+                        <tr><td>nested table</td></tr>
+                        <tr><td>nested table</td></tr>
+                    </table>
+                    
+                </td>
+            </tr>
+        </table>-->
+        <table class="slds-table slds-table_cell-buffer schedule-table slds-table_bordered" id="myTable">
+                          <thead>
+                            <tr class="slds-text-title_caps">
+                              <th class="title-col" scope="col">
+                                <div class="slds-truncate "></div>
+                              </th>
+                              <!-- ngRepeat: phase in phaseList track by $index --><th>
+                                <span class="title-span ng-binding" ng-click="editPhase( phase, $index )" title="Edit Phase">Phase 1</span>
+                              </th><!-- end ngRepeat: phase in phaseList track by $index --><th>
+                                <span class="title-span ng-binding" ng-click="editPhase( phase, $index )" title="Edit Phase">Phase 2</span>
+                              </th><!-- end ngRepeat: phase in phaseList track by $index --><th>
+                                <span class="title-span ng-binding" ng-click="editPhase( phase, $index )" title="Edit Phase">Phase 3</span>
+                              </th><!-- end ngRepeat: phase in phaseList track by $index -->
+                              <th class="detail-col" scope="col">
+                                <div class="slds-truncate  addmore-cell" title="Add Phase">
+                                    <span class="slds-icon_container slds-icon-utility-new cursor-pointer add-phase" ng-click="addPhase()" title="Add Phase">
+                                      
+                                      
+                                    </span>
+                                </div>
+                              </th>
+                              <th class="total-col" scope="col">
+                                Scheduled
+                              </th>
+                              <th class="total-col" scope="col">
+                                Project
+                              </th>
+                              <th class="total-col" scope="col">
+                                Remaining
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr class="schedule-detail-rows text-left">
+                              <th class="title-col" scope="row">
+                                Project Delivery
+                              </th>
+                              <!-- ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    03/31/18
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    04/01/18
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    03/31/18
+                              </td><!-- end ngRepeat: phase in phaseList track by $index -->
+                              <td class="detail-col" data-label="Add Phase">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total Project Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Remaining Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                            </tr>
+
+                            <tr class="schedule-detail-rows text-left">
+                              <th class="title-col" scope="row">
+                                Status
+                              </th>               
+                              <!-- ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    Scheduled
+                               </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    Scheduled
+                               </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    Scheduled
+                               </td><!-- end ngRepeat: phase in phaseList track by $index -->
+                              <td class="detail-col" data-label="Add Phase">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total Project Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Remaining Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                            </tr>
+
+                            <tr class="schedule-detail-rows text-left">
+                              <th class="title-col" scope="row">
+                                BWR PO Number
+                              </th>
+                              <!-- ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    123
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    789
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-binding ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    666
+                              </td><!-- end ngRepeat: phase in phaseList track by $index -->
+                              <td class="detail-col" data-label="Add Phase">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total Project Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Remaining Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                            </tr>
+
+                            <tr class="schedule-detail-rows slds-border_bottom text-left">
+                              <th class="title-col">
+                                Vendor Order Number
+                              </th>
+                              <!-- ngRepeat: phase in phaseList track by $index --><td>
+                                    456
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td>
+                                    9456
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td>
+                                    666
+                              </td><!-- end ngRepeat: phase in phaseList track by $index -->
+                              <td class="detail-col" data-label="Add Phase">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total Project Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Remaining Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                            </tr>
+
+                            <!-- ngRepeat: productList in productLists track by $index --><tr>
+                              <th class="title-col">
+                                <span>Window 1</span>
+                              </th>                   
+
+                              <!-- ngRepeat: phase in phaseList track by phase.Id --><td>
+                                    <div class="slds-form-element__control">
+                                        <p ng-hide="true" class="ng-binding ng-hide">
+                                        a0p21000003Uj4tAAC
+                                        a0n21000003fzS0AAI
+                                        </p>
+                                        <input class="slds-input slds-text-align_center" integer-only="true" maxlength="18" min="0" ng-change="validateQty( $index, $parent.$index )" ng-model="phaseDetailList[$parent.$index][$index].Quantity__c" step="1" type="text"/>
+                                    </div>
+                              </td><!-- end ngRepeat: phase in phaseList track by phase.Id --><td>
+                                    <div class="slds-form-element__control">
+                                        <p ng-hide="true" class="ng-binding ng-hide">
+                                        a0p21000003Uj4yAAC
+                                        a0n21000003fzS0AAI
+                                        </p>
+                                        <input class="slds-input slds-text-align_center" integer-only="true" maxlength="18" min="0" ng-change="validateQty( $index, $parent.$index )" ng-model="phaseDetailList[$parent.$index][$index].Quantity__c" step="1" type="text"/>
+                                    </div>
+                              </td><!-- end ngRepeat: phase in phaseList track by phase.Id --><td>
+                                    <div class="slds-form-element__control">
+                                        <p ng-hide="true" class="ng-binding ng-hide">
+                                        a0p21000003Uj53AAC
+                                        a0n21000003fzS0AAI
+                                        </p>
+                                        <input class="slds-input slds-text-align_center" integer-only="true" maxlength="18" min="0" ng-change="validateQty( $index, $parent.$index )" ng-model="phaseDetailList[$parent.$index][$index].Quantity__c" step="1" type="text"/>
+                                    </div>
+                              </td><!-- end ngRepeat: phase in phaseList track by phase.Id -->
+
+                              <td>
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td>
+                                0
+                              </td>
+                              <td>
+                                    5000
+                                    <span ng-show="productList.Total_Project_Quantity__c === undefined" class="ng-hide">0</span>
+                              </td>
+                              <td class="total-col ng-binding" data-label="Remaining Quantity">
+                                5000
+                              </td>
+                            </tr><!-- end ngRepeat: productList in productLists track by $index --><tr>
+                              <th class="title-col">
+                                <span class="title-span ng-binding" ng-click="editProdList( productList, $index )" title="Edit Product">Window 2</span>
+                              </th>                   
+
+                              <!-- ngRepeat: phase in phaseList track by phase.Id --><td>
+                                    <div class="slds-form-element__control">
+                                        <p ng-hide="true" class="ng-binding ng-hide">
+                                        a0p21000003Uj4tAAC
+                                        a0n21000003fzSAAAY
+                                        </p>
+                                        <input class="slds-input slds-text-align_center" integer-only="true" maxlength="18" min="0" ng-change="validateQty( $index, $parent.$index )" ng-model="phaseDetailList[$parent.$index][$index].Quantity__c" step="1" type="text"/>
+                                    </div>
+                              </td><!-- end ngRepeat: phase in phaseList track by phase.Id --><td>
+                                    <div class="slds-form-element__control">
+                                        <p ng-hide="true" class="ng-binding ng-hide">
+                                        a0p21000003Uj4yAAC
+                                        a0n21000003fzSAAAY
+                                        </p>
+                                        <input class="slds-input slds-text-align_center" integer-only="true" maxlength="18" min="0" ng-change="validateQty( $index, $parent.$index )" ng-model="phaseDetailList[$parent.$index][$index].Quantity__c" step="1" type="text"/>
+                                    </div>
+                              </td><!-- end ngRepeat: phase in phaseList track by phase.Id --><td class="detail-col ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by phase.Id">
+                                    <div class="slds-form-element__control">
+                                        <p ng-hide="true" class="ng-binding ng-hide">
+                                        a0p21000003Uj53AAC
+                                        a0n21000003fzSAAAY
+                                        </p>
+                                        <input class="slds-input slds-text-align_center" integer-only="true" maxlength="18" min="0" ng-change="validateQty( $index, $parent.$index )" ng-model="phaseDetailList[$parent.$index][$index].Quantity__c" step="1" type="text"/>
+                                    </div>
+                              </td><!-- end ngRepeat: phase in phaseList track by phase.Id -->
+
+                              <td>
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td>
+                                0
+                              </td>
+                              <td>
+                                    6000
+                                    <span ng-show="productList.Total_Project_Quantity__c === undefined" class="ng-hide">0</span>
+                              </td>
+                              <td>
+                                6000
+                              </td>
+                            </tr>
+
+                            <tr class="more-productList-row text-left">
+                              <th class="title-col" scope="row">
+                                <span class="slds-icon_container slds-icon-utility-new cursor-pointer add-productList" ng-click="addProdList()" title="Add Product">
+                                  
+                                  <span class="slds-assistive-text">Add Product</span>
+                                </span>
+                              </th>
+                              <!-- ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                              </td><!-- end ngRepeat: phase in phaseList track by $index --><td class="detail-col ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                              </td><!-- end ngRepeat: phase in phaseList track by $index -->
+                              <td class="detail-col" data-label="Add Phase">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Total Project Quantity">
+                                <div class="slds-truncate"></div>
+                              </td>
+                              <td class="total-col" data-label="Remaining Quantity">
+                                <div class="slds-truncate "></div>
+                              </td>
+                            </tr>
+                            </tbody><tfoot>
+                                <tr class="footer-row">
+                                  <th class="title-col" scope="row" style="text-align: left;">
+                                    Total
+                                  </th>
+                                  <!-- ngRepeat: phase in phaseList track by $index --><th class="detail-col ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    <div class="slds-truncate ng-binding">0</div>
+                                  </th><!-- end ngRepeat: phase in phaseList track by $index --><th class="detail-col ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    <div class="slds-truncate ng-binding">0</div>
+                                  </th><!-- end ngRepeat: phase in phaseList track by $index --><th class="detail-col ng-scope" data-label="phase.Name" ng-repeat="phase in phaseList track by $index">
+                                    <div class="slds-truncate ng-binding">0</div>
+                                  </th><!-- end ngRepeat: phase in phaseList track by $index -->
+                                  <th class="detail-col" data-label="Add Phase">
+                                    <div class="slds-truncate "></div>
+                                  </th>
+                                  <th class="total-col ng-binding" data-label="Total">
+                                    0
+                                  </th>
+                                  <th class="total-col ng-binding" data-label="Total Project Quantity">
+                                    18900
+                                  </th>
+                                  <th class="total-col ng-binding" data-label="Remaining Quantity">
+                                    18900
+                                  </th>
+                                </tr>
+                            </tfoot>
+                          
+                        </table>
+        <button ng-click="exportToExcel('#myTable')">
+            Export to excel
+        </button>
+    </div>
+    <script>
+    	var eapp = angular.module('eapp',[]);
+    
+    	function excelfactory($window){
+        	var uri='data:application/vnd.ms-excel;base64,',
+            template='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+            base64=function(s){return $window.btoa(unescape(encodeURIComponent(s)));},
+            format=function(s,c){return s.replace(/{(\w+)}/g,function(m,p){return c[p];})};
+            return {
+                tableToExcel:function(tableId,worksheetName){
+                    var table=$(tableId),
+                        ctx={worksheet:worksheetName,table:table.html()},
+                        href=uri+base64(format(template,ctx));
+                    return href;
+                }
+            };
+        }
+    
+    	eapp.factory('excelfactory',excelfactory);
+    	function eappctrl($scope,excelfactory,$timeout){
+            $scope.exportToExcel=function(tableId){ // ex: '#my-table'
+                var exportHref=excelfactory.tableToExcel(tableId,'WireWorkbenchDataExport');
+                $timeout(function(){location.href=exportHref;},100); // trigger download
+            }
+        }
+    	eapp.controller('eappctrl',eappctrl);
+    </script>
+</apex:page>

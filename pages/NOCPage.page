@@ -1,0 +1,24 @@
+<apex:page standardController="Account" extensions="publicSitetestCnt">
+    <apex:form >
+    	<div>
+            <apex:actionFunction action="{!updateAccouuntNContact}" name="updateAccouuntNContact" oncomplete="callback(success,error);">
+            	<apex:param name="addressD" value=""/>
+                <apex:param name="NOE" value=""/>
+            </apex:actionFunction>
+            <apex:inputText styleclass="address" label="Address" value="{!accountRec.Destination_Address__c}"/>
+            <apex:inputText styleclass="noe" label="NOE" value="{!accountRec.NumberofLocations__c}"/>
+            <button type="button" onclick="updateDetails();">
+                Update
+            </button>
+        </div>
+    </apex:form>
+    <script>
+    	function updateDetails(){
+        	updateAccouuntNContact(document.getElementsByClassName('address')[0].value,document.getElementsByClassName('noe')[0].value);
+        }
+    	function callback(success,error){
+            console.log(success);
+            console.log(error);
+        }
+    </script>
+</apex:page>

@@ -1,0 +1,36 @@
+<apex:page controller="GSheetPageController">
+    <apex:slds />
+    <style>
+    	.slds-select{width:auto !important;}
+    </style>
+    <apex:form >
+        <select class="pageName slds-select slds-combobox__input" value="{!selectedPage}">
+            <apex:repeat value="{!options}" var="option">
+                <option value="{!option.value}">{!option.label}</option>
+            </apex:repeat>
+        </select>
+        <button type="button" class="slds-button slds-button_brand" onclick="redirectToUrl();" style="margin-left: 8px; margin-top: -2px;">View</button>
+    </apex:form>
+    <apex:includeScript value="/soap/ajax/43.0/connection.js"/>
+    <apex:includeScript value="/soap/ajax/43.0/apex.js"/>
+    <apex:includeScript value="/support/console/43.0/integration.js"/>
+    <script>
+    	sforce.connection.sessionId='{!GETSESSIONID()}';
+        function redirectToUrl(){
+            var pageName = document.getElementsByClassName('pageName');
+            if(pageName){
+                //window.location.href = document.getElementsByClassName('pageName')[0].value+'?oppId='+getUrlParam('oppId','Empty');
+                if ((typeof sforce != undefined) && sforce && (!!sforce.one)){
+                    // Salesforce1 navigation
+                    sforce.one.navigateToURL(pageName[0].value);
+                } else {
+                    // Set the window’s URL using a Visualforce expression
+                    //window.location = '/apex/'+document.getElementsByClassName('pageName')[0].value+'?oppId='+getUrlParam('oppId','Empty');
+                    window.location = pageName[0].value;
+                    // site prefix helps when navigation in community
+                }
+            }
+        }
+        
+    </script>
+</apex:page>

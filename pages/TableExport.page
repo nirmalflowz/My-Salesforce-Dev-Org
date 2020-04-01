@@ -1,0 +1,363 @@
+<apex:page ><!-- contentType="application/vnd.ms-excel"-->
+    <apex:includeScript value="{!URLFOR($Resource.tableexport, 'jquery.js')}" />
+    <!--<apex:includeScript value="{!URLFOR($Resource.tableexport, 'tableExport.js')}" /> 
+    <apex:includeScript value="{!URLFOR($Resource.tableexport, 'jquery.base64.js')}" /> 	
+	<apex:includeScript value="{!URLFOR($Resource.tableexport, 'html2canvas.js')}" />    
+    <apex:includeScript value="{!URLFOR($Resource.tableexport, 'sprintf.js')}" />-->
+    <apex:includeScript value="https://cdnjs.cloudflare.com/ajax/libs/jspdf/1.4.1/jspdf.debug.js" />
+    <!--<apex:includeScript value="{!URLFOR($Resource.tableexport, 'base64.js')}" />-->
+    <apex:includeScript value="{!URLFOR($Resource.tableexport, 'angular.min.js')}" />
+	<div ng-app="MyApp" ng-controller="MyCtrl" id="customers">
+        <div class="slds-scope container ng-scope">
+            <a href="javascript:void(0);" ng-click="exportToExcel($event)">Excel</a>
+            <a href="javascript:void(0);" ng-click="exportpdf($event)">Pdf</a>
+            <div class="slds-title bgblue">
+                <h1 class="slds-page-header__title">
+                    Baylor Scott &amp; White Medical Center - Brenham (ED)
+                </h1>
+            </div>
+            <div class="slds-tabs_default tabs">
+                <ul class="slds-tabs_default__nav navBar">
+                    <li class="slds-tabs_default__item slds-is-active">
+                        <a class="slds-tabs_default__link" href="#tab-default-1">RECRUITING</a>
+                    </li>
+                    <li class="slds-tabs_default__item">
+                        <a class="slds-tabs_default__link" href="#tab-default-2">CREDENTIALING</a>
+                    </li>
+                    <li class="slds-tabs_default__item">
+                        <a class="slds-tabs_default__link" href="#tab-default-3">ENROLLMENT</a>
+                    </li>
+                </ul>
+                <div class="content">
+                    <div class="slds-tabs_default__content slds-show" id="tab-default-1"><span id="j_id0:j_id5">
+    <div>
+        <ul class="accordionlist">
+            <li ng-init="showHighlight = true" data-title="HIGHLIGHTS">
+                <a href="unsafe:javascript:void(0);" ng-click="showHighlight != showHighlight">V HIGHLIGHTS</a>
+                <div ng-show="showHighlight">
+                    <table border="0"  cellpadding="0" cellspacing="0" class="tableexcel slds-table slds-table_bordered slds-table_col-bordered tableStyle" width="100%">
+                    <thead>
+                        
+                        <tr>
+                            <th></th>
+                            <th>All</th>
+                            <th>Physician</th>
+                            <th>APP</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th>% Recruited</th>
+                            <td>100.0%</td>
+                            <td>100.0%</td>
+                            <td>100.0%</td>
+                        </tr>
+                        <tr>
+                            <th>% Staffed</th>
+                            <td>100.0%</td>
+                            <td>100.0%</td>
+                            <td>100.0%</td>
+                        </tr>
+                        <tr>
+                            <th>FTE's Recruited</th>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                        </tr>
+                        <tr>
+                            <th>FTE's Staffed</th>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                        </tr>
+                        <tr>
+                            <th>FTE's Needed</th>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                        </tr>
+                        <tr>
+                            <th>Total Openings</th>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                        </tr>
+                        <tr>
+                            <th>Avg # of Days Open</th>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                            <td>4.0</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table border="0"  cellpadding="0" cellspacing="0" class="tableexcel slds-table slds-table_bordered slds-table_col-bordered tableStyle" width="100%">
+                    <thead>
+                        <tr>
+                            <th colspan="2">Shifts</th>
+                        </tr>
+                        <tr>
+                            <th>Physician Shifts</th>
+                            <th>APP Shifts</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1. djsdj</td>
+                            <td>2. dfsdf</td>
+                        </tr>
+                    </tbody>
+                </table>
+                </div>
+                
+            </li>
+            
+            <li data-title="ASSIGNMENTS">
+                V ASSIGNMENTS
+                <table border="0" cellpadding="0" cellspacing="0" class=" tableexcel slds-table slds-table_bordered slds-table_col-bordered tableStyle" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Full Time Providers</th>
+                            <th>Title</th>
+                            <th>Degree</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Bundern, Mary</td>
+                            <td>Director of Ultrashound</td>
+                            <td>DO</td>
+                            <td></td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table border="0"  cellpadding="0" cellspacing="0" class="tableexcel slds-table slds-table_bordered slds-table_col-bordered tableStyle" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Opening Type</th>
+                            <th>Open Date</th>
+                            <th># of Days Open</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Medical Director</td>
+                            <td>5/1/2018</td>
+                            <td>58</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+            <li data-title="APPLICATIONS">
+                V APPLICATIONS
+                <table border="0" cellpadding="0" cellspacing="0" class="tableexcel slds-table slds-table_bordered slds-table_col-bordered tableStyle" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Provider</th>
+                            <th>Stage</th>
+                            <th>Job Status</th>
+                            <th>Interview Date</th>
+                            <th>Contract Sent</th>
+                            <th>Contract Received</th>
+                            <th>Contract Effective Date</th>
+                            <th>Target Start Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>v PHYSICIAN</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td rowspan="2">Aaron, Kimberly MD</td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <tr>
+                            <td colspan="8">Notes:</td>
+                        </tr>
+                    </tbody>
+                </table>
+                
+                <table border="0"  cellpadding="0" cellspacing="0" class="tableexcel slds-table slds-table_bordered slds-table_col-bordered tableStyle" width="100%">
+                    <thead>
+                        <tr>
+                            <th>Opening Type</th>
+                            <th>Open Date</th>
+                            <th># of Days Open</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Medical Director</td>
+                            <td>5/1/2018</td>
+                            <td>58</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </li>
+        </ul>
+        
+    </div></span>
+                    </div>
+                    
+                    <div class="slds-tabs_default__content" id="tab-default-2" style="display:none;">
+                        
+                    </div>
+                    
+                    <div class="slds-tabs_default__content" id="tab-default-3" style="display:none;">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    	var app = angular.module('MyApp',[]);
+    
+    	app.factory('Excel',function($window){
+		var uri='data:application/vnd.ms-excel;base64,',
+			template='<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{worksheet}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body><table>{table}</table></body></html>',
+			base64=function(s){return $window.btoa(unescape(encodeURIComponent(s)));},
+			format=function(s,c){return s.replace(/{(\w+)}/g,function(m,p){return c[p];})};
+		return {
+			tableToExcel:function(tableId,worksheetName){
+				var table=$(tableId),
+					ctx={worksheet:worksheetName,table:table.html()},
+					href=uri+base64(format(template,ctx));
+				return href;
+			}
+		};
+	});
+    
+    	function MyCtrl($scope, Excel, $timeout){
+        	console.log($scope);
+            $scope.exportpdf = function(event){
+                var pdf = new jsPDF('p', 'pt', 'letter');
+                // source can be HTML-formatted string, or a reference
+                // to an actual DOM element from which the text will be scraped.
+                source = $('#customers')[0];
+                
+                // we support special element handlers. Register them with jQuery-style 
+                // ID selector for either ID or node name. ("#iAmID", "div", "span" etc.)
+                // There is no support for any other type of selectors 
+                // (class, of compound) at this time.
+                specialElementHandlers = {
+                    // element with id of "bypass" - jQuery style selector
+                    '#bypassme': function(element, renderer) {
+                        // true = "handled elsewhere, bypass text extraction"
+                        return true
+                    }
+                };
+                margins = {
+                    top: 80,
+                    bottom: 60,
+                    left: 40,
+                    width: 522
+                };
+                // all coords and widths are in jsPDF instance's declared units
+                // 'inches' in this case
+                pdf.fromHTML(
+                    source, // HTML string or DOM elem ref.
+                    margins.left, // x coord
+                    margins.top, {// y coord
+                        'width': margins.width, // max width of content on PDF
+                        'elementHandlers': specialElementHandlers
+                    },
+                    function(dispose) {
+                        // dispose: object with X, Y of the last line add to the PDF 
+                        //          this allow the insertion of new lines after html
+                        pdf.save('Test.pdf');
+                    }
+                    , margins);
+            }
+            
+            $scope.exportToExcel=function(event){ // ex: '#my-table'
+                //$scope.exportHref=Excel.tableToExcel(tableId,'sheet name');
+                //$timeout(function(){location.href=$scope.exportHref;},100); // trigger download
+                event.preventDefault();
+                event.stopPropagation();
+                toExcel();
+            }
+            
+            function toExcel() {
+                
+                if ("ActiveXObject" in window) {
+                    alert("This is Internet Explorer!");
+                } else {
+                    
+                    var cache = {};
+                    this.tmpl = function tmpl(str, data) {
+                        var fn = !/\W/.test(str) ? cache[str] = cache[str] || tmpl(document.getElementById(str).innerHTML) :
+                        new Function("obj",
+                                     "var p=[],print=function(){p.push.apply(p,arguments);};" +
+                                     "with(obj){p.push('" +
+                                     str.replace(/[\r\t\n]/g, " ")
+                                     .split("{{").join("\t")
+                                     .replace(/((^|}})[^\t]*)'/g, "$1\r")
+                                     .replace(/\t=(.*?)}}/g, "',$1,'")
+                                     .split("\t").join("');")
+                                     .split("}}").join("p.push('")
+                                     .split("\r").join("\\'") + "');}return p.join('');");
+                        return data ? fn(data) : fn;
+                    };
+                    var tableToExcel = (function () {
+                        var uri = 'data:application/vnd.ms-excel;base64,',
+                            template = '<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40"><head><!--[if gte mso 9]><xml><x:ExcelWorkbook><x:ExcelWorksheets><x:ExcelWorksheet><x:Name>{{=worksheet}}</x:Name><x:WorksheetOptions><x:DisplayGridlines/></x:WorksheetOptions></x:ExcelWorksheet></x:ExcelWorksheets></x:ExcelWorkbook></xml><![endif]--></head><body>{{for(var i=0; i<tables.length;i++){ }}<table>{{=tables[i]}}</table>{{ } }}</body></html>',
+                            base64 = function (s) {
+                                return window.btoa(unescape(encodeURIComponent(s)));
+                            },
+                            format = function (s, c) {
+                                return s.replace(/{(\w+)}/g, function (m, p) {
+                                    return c[p];
+                                });
+                            };
+                        return function (tableList, name) {
+                            if (!tableList.length > 0 && !tableList[0].nodeType) table = document.getElementById(table);
+                            var tables = [];
+                            var tabletitles = [];
+                            for (var i = 0; i < tableList.length; i++) {
+                                var tabletitle = '';
+                                var lititle = angular.element(tableList[i]).closest('li')[0].dataset.title;
+                                
+                                if(tabletitles.indexOf(lititle) > -1){
+                                    tabletitle = '<tr></tr>';
+                                }else{
+                                    tabletitle = '<h3>'+lititle+'</h3><tr></tr>';
+                                    tabletitles.push(lititle);
+                                }
+                                
+                                tabletitle += tableList[i].innerHTML;
+                                tabletitle += '<tr></tr>';
+                                tables.push(tabletitle);
+                            }
+                            var ctx = {
+                                worksheet: name || 'Worksheet',
+                                tables: tables
+                            };
+                            
+                            window.location.href = uri + base64(tmpl(template, ctx));
+                        };
+                    })();
+                    tableToExcel(document.getElementsByClassName("tableexcel"), "one");
+                }
+            }
+        }
+    
+    	app.controller('MyCtrl',MyCtrl);
+    </script>
+</apex:page>

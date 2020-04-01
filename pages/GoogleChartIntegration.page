@@ -1,0 +1,76 @@
+<apex:page standardStylesheets="false">
+  
+  <h1>Google Charts</h1>
+    
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript">
+      google.charts.load('current', {'packages':['corechart', 'bar']});
+      google.charts.setOnLoadCallback(drawStuff);
+
+      function drawStuff() {
+
+        
+        var chartDiv = document.getElementById('chart_div');
+
+        var data = google.visualization.arrayToDataTable([
+          ['Year', 'Air Purchases Inc',{ type: 'string', role: 'style' }, 'Industry',{ type: 'string', role: 'style' },'Average',{ type: 'string', role: 'style' }],
+          ['2017', 8000,'#239cd3', 9000,'#fcb13e',8000,'#53904e'],
+          ['2018', 24000,'#239cd3', 21000,'#fcb13e',24000,'#53904e'],
+          ['2019', 30000,'#239cd3', 30500,'#fcb13e',30000,'#53904e']
+        ]);
+		var legend = {
+        	position : 'bottom'
+        };
+        var materialOptions = {
+          width: 900,
+          
+          chart: {
+              legend: legend,
+              title: 'Market Growth'/*,
+            subtitle: 'distance on the left, brightness on the right'*/
+          },
+          series: {
+            0: { axis: 'distance' }, // Bind series 0 to an axis named 'distance'.
+            1: { axis: 'brightness' } // Bind series 1 to an axis named 'brightness'.
+          },
+          axes: {
+            y: {
+              distance: {label: 'parsecs'}, // Left y-axis.
+              brightness: {side: 'right', label: 'apparent magnitude'} // Right y-axis.
+            }
+          }
+        };
+
+        var classicOptions = {
+          width: 900,
+            /*series: {
+            0: {targetAxisIndex: 0},
+            1: {targetAxisIndex: 1}
+          },*/
+          title: 'Market Growth',
+          
+            /*vAxes: {
+            // Adds titles to each axis.
+            0: {title: 'parsecs'},
+            1: {title: 'apparent magnitude'}
+          },*/
+           legend: legend ,
+            seriesType: 'bars',
+               series: {2: {type: 'line',annotations: {
+      textStyle: {fontSize: 12, color: 'red' },alwaysOutside:true
+    }}},
+            colors: ['#239cd3', '#fcb13e', '#53904e']
+        };
+
+        function drawMaterialChart() {
+          var classicChart = new google.visualization.ComboChart(chartDiv);
+          classicChart.draw(data, classicOptions);
+        }
+
+        
+
+        drawMaterialChart();
+    };
+    </script>
+  <div id="chart_div" style="width: 800px; height: 500px;"></div>
+</apex:page>
