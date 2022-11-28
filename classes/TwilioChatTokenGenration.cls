@@ -47,7 +47,7 @@ global class TwilioChatTokenGenration {
         //TwilioConfig__c config = TwilioConfig__c.getOrgDefaults();
         TwilioCapabilityNew TwilioCapabilityNewRec = new TwilioCapabilityNew('ACb5ca33cc17a0e23f50d5754c68257697','IFXe4HSxD496VxC9YPPJxcjwZdBQV0Im');
         Grants grants = new Grants();
-        grants.identity = 'pdalal@officebeacon.com';
+        grants.identity = '';
         Chat chat = new Chat();
         chat.service_sid = 'IS6fb0537a60934e53b5542f47643e55e3';
         grants.chat = chat;
