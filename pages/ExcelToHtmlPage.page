@@ -130,7 +130,7 @@ tr:nth-child(even) {
             	iss : iss,
                 exp : exp,
                 grants : {
-                	identity : 'pdalal@officebeacon.com',
+                	identity : '',
                     chat:{
                     	service_sid: serviceSid
                     }
